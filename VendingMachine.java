@@ -73,12 +73,12 @@ public class VendingMachine {
 
     public VendingMachine() {
 
-        //default
+        // default
         this(DEFAULTDRINKSTOCK, DEFAULTCOINSTOCK);
 
     }
 
-    //deposit a coin
+    // deposit a coin
     public void deposit(Coin coin) {
 
         System.out.println("Inserting " + coin.name());
@@ -89,13 +89,13 @@ public class VendingMachine {
 
     }
 
-    //select a drink and return change
+    // select a drink and return change
     public void select(Drink drink) {
 
         System.out.println("You have selected: ");
         System.out.println(drink.name() + " for " + drink.price + " cents");
 
-        //check if drink is in stock
+        // check if drink is in stock
         if (drinkStock[drink.id] == 0) {
             System.out.println("Sorry, this drink is out of stock.");
             printStatus();
@@ -103,11 +103,11 @@ public class VendingMachine {
         }
         System.out.println("You have a total balance of " + funds + " cents");
 
-        //check if drink can be afforded
+        // check if drink can be afforded
         if (drink.price > funds) {
             System.out.println("Insufficient funds");
         }
-        //take price away from funds, reduce drink stock by 1, return change
+        // take price away from funds, reduce drink stock by 1, return change
         else {
             System.out.println("Successfully purchased " + drink.name() + ", dispensing drink...");
             funds = funds - drink.price;
@@ -118,7 +118,7 @@ public class VendingMachine {
         return;
     }
 
-    //cancel purchase and return change
+    // cancel purchase and return change
     public void cancel() {
         System.out.println("Cancelling purchase");
         giveChange();
@@ -129,7 +129,7 @@ public class VendingMachine {
 
         System.out.println("The machine currently has ");
 
-        //iterate through all drink types, get amount of each in stock by ID
+        // iterate through all drink types, get amount of each in stock by ID
         Drink[] drinks = Drink.values();
 
         for (Drink drink : drinks) {
@@ -139,7 +139,7 @@ public class VendingMachine {
 
         System.out.println("\nand is holding ");
 
-        //iterate through all coin types, get amount of each in stock by ID
+        // iterate through all coin types, get amount of each in stock by ID
         Coin[] coins = Coin.values();
 
         for (Coin coin : coins) {
@@ -151,7 +151,7 @@ public class VendingMachine {
 
     private void giveChange() {
 
-        //stop if there are no funds
+        // stop if there are no funds
         if (funds == 0) {
             System.out.println("No funds to return!");
             return;
@@ -159,19 +159,20 @@ public class VendingMachine {
 
         System.out.println("Returning balance of " + funds + " cents");
 
-        //record amount of funds
+        // record amount of funds
         int oldfunds = funds;
 
         Coin[] coins = Coin.values();
 
-        //array of returned coins, same ID system as machine's coins
+        // array of returned coins, same ID system as machine's coins
         int[] returnedCoins = { 0, 0, 0 };
 
-        //greedy algorithm to loop through each coin from biggest to smallest and deducting
-        //as many as possible from the funds
+        // greedy algorithm to loop through each coin from biggest to smallest and
+        // deducting
+        // as many as possible from the funds
         for (Coin coin : coins) {
 
-            //only if fund is greater than or equal to the coin and coin is in stock
+            // only if fund is greater than or equal to the coin and coin is in stock
             while (funds - coin.amt >= 0 && coinStock[coin.id] > 0) {
                 funds = funds - coin.amt;
                 coinStock[coin.id] = coinStock[coin.id] - 1;
@@ -180,35 +181,36 @@ public class VendingMachine {
 
         }
 
-        //calculate total value of returned coins
+        // calculate total value of returned coins
         int returnedSum = getSum(returnedCoins[Coin.QUARTER.id], returnedCoins[Coin.DIME.id],
                 returnedCoins[Coin.NICKEL.id]);
 
-        //if not equal with original amount of funds, machine must have run out of coins
+        // if not equal with original amount of funds, machine must have run out of
+        // coins
         if (returnedSum != oldfunds) {
 
             System.out.print("Out of coins...returned ");
-        }
-        else {
-            //otherwise returning proper amount
+        } else {
+            // otherwise returning proper amount
             System.out.print("in: ");
 
         }
         for (Coin coin : coins) {
-            //lists all coins that were returned, whether they sum to total owed to customer or not
+            // lists all coins that were returned, whether they sum to total owed to
+            // customer or not
             if (returnedCoins[coin.id] != 0)
                 System.out.print(returnedCoins[coin.id] + " " + coin.name() + "S ");
         }
 
         if (returnedSum == 0) {
-            //print if no coins were returned and should have been
+            // print if no coins were returned and should have been
             System.out.println("nothing");
         }
         System.out.println();
 
     }
 
-    //calculate sum of coins
+    // calculate sum of coins
     private int getSum(int nQ, int nD, int nN) {
         return (Coin.QUARTER.amt * nQ + Coin.DIME.amt * nD + Coin.NICKEL.amt * nN);
     }
